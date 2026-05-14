@@ -38,6 +38,10 @@ export function BookingForm() {
         <option>皮毛 SPA</option>
         <option>接送服务</option>
       </select>
+      <label className="field-label full">
+        <span>期望到店时间</span>
+        <input type="datetime-local" name="arrivalTime" required />
+      </label>
       <textarea
         name="message"
         placeholder="补充说明：宠物年龄、体重、是否怕水、是否打结等"

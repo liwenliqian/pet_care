@@ -19,6 +19,15 @@ export default function Home() {
                 了解服务
               </Link>
             </div>
+            <div className="arrival-prompt" aria-label="期望到店时间">
+              <label>
+                <span>期望到店时间</span>
+                <input type="datetime-local" name="arrivalTime" />
+              </label>
+              <Link className="button" href="/booking">
+                预约到店
+              </Link>
+            </div>
             <div className="stats" aria-label="门店数据">
               <div className="stat">
                 <strong>4.9/5</strong>
