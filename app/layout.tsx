@@ -8,6 +8,7 @@ const navItems = [
   { href: "/pricing", label: "套餐价格" },
   { href: "/environment", label: "店内环境" },
   { href: "/reviews", label: "客户评价" },
+  { href: "/location", label: "门店信息" },
   { href: "/booking", label: "预约到店" },
 ];
 

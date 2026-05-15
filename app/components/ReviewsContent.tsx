@@ -2,6 +2,8 @@ import Link from "next/link";
 import { reviews } from "@/app/data/site";
 
 export function ReviewsContent() {
+  const carouselReviews = [...reviews, ...reviews];
+
   return (
     <>
       <div className="review-head" aria-label="评价概览">
@@ -41,25 +43,31 @@ export function ReviewsContent() {
         </article>
       </div>
 
-      <div className="review-grid" aria-label="更多客户评价">
-        {reviews.map((review) => (
-          <article className="review-card" key={review.name}>
-            <div className="review-meta">
-              <span className="stars" aria-label="评分 5 分">
-                ★★★★★
-              </span>
-              <span>{review.name}</span>
-            </div>
-            <p>{review.body}</p>
-            <div className="review-tags" aria-label="评价标签">
-              {review.tags.map((tag) => (
-                <span className="pill" key={tag}>
-                  {tag}
+      <div className="review-carousel" aria-label="更多客户评价轮播">
+        <div className="review-track">
+          {carouselReviews.map((review, index) => (
+            <article
+              className="review-card"
+              key={`${review.name}-${index}`}
+              aria-hidden={index >= reviews.length ? "true" : undefined}
+            >
+              <div className="review-meta">
+                <span className="stars" aria-label="评分 5 分">
+                  ★★★★★
                 </span>
-              ))}
-            </div>
-          </article>
-        ))}
+                <span>{review.name}</span>
+              </div>
+              <p>{review.body}</p>
+              <div className="review-tags" aria-label="评价标签">
+                {review.tags.map((tag) => (
+                  <span className="pill" key={tag}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     </>
   );

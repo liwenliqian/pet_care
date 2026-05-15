@@ -1,4 +1,4 @@
-﻿:root {
+:root {
       --cream: #fff8ed;
       --cream-dark: #f7ead6;
       --coral: #ff7f66;
@@ -779,14 +779,26 @@
       font-size: 14px;
     }
 
-    .review-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
+    .review-carousel {
+      position: relative;
       margin-top: 22px;
+      overflow: hidden;
+      mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    }
+
+    .review-track {
+      width: max-content;
+      display: flex;
+      gap: 18px;
+      animation: review-scroll 34s linear infinite;
+    }
+
+    .review-carousel:hover .review-track {
+      animation-play-state: paused;
     }
 
     .review-card {
+      flex: 0 0 clamp(280px, 31vw, 390px);
       padding: 22px;
       border-radius: 28px;
       background: rgba(255, 255, 255, 0.76);
@@ -794,6 +806,7 @@
       border: 1px solid rgba(255, 255, 255, 0.72);
       display: grid;
       gap: 10px;
+      align-content: start;
     }
 
     .review-card p {
@@ -849,6 +862,28 @@
       border-radius: 18px;
       background: var(--cream-dark);
       font-size: 25px;
+    }
+
+    @keyframes review-scroll {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(calc(-50% - 9px));
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .review-track {
+        animation: none;
+      }
+
+      .review-carousel {
+        overflow-x: auto;
+        mask-image: none;
+        scrollbar-width: thin;
+      }
     }
 
     .booking {
@@ -930,6 +965,16 @@
       color: #133d32;
       background: #bff2df;
       font-weight: 800;
+    }
+
+    .notice-error {
+      color: #6b1f1b;
+      background: #ffd6cf;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.72;
     }
 
     .location-card {
@@ -1170,7 +1215,23 @@
     }
 
     @media (max-width: 920px) {
+      .nav-inner {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 12px 0;
+      }
+
       .nav-links {
+        order: 3;
+        width: 100%;
+        overflow-x: auto;
+        gap: 16px;
+        padding: 2px 0 6px;
+        scrollbar-width: none;
+        white-space: nowrap;
+      }
+
+      .nav-links::-webkit-scrollbar {
         display: none;
       }
 
@@ -1194,8 +1255,8 @@
         min-height: 480px;
       }
 
-      .review-grid {
-        grid-template-columns: repeat(2, 1fr);
+      .review-card {
+        flex-basis: clamp(270px, 44vw, 360px);
       }
 
       .price-card.featured {
@@ -1216,9 +1277,28 @@
       .cards,
       .pricing,
       .process,
-      .review-grid,
       form {
         grid-template-columns: 1fr;
+      }
+
+      .review-carousel {
+        margin-inline: -14px;
+        padding-inline: 14px;
+        overflow-x: auto;
+        mask-image: none;
+        scrollbar-width: none;
+      }
+
+      .review-carousel::-webkit-scrollbar {
+        display: none;
+      }
+
+      .review-track {
+        animation-duration: 42s;
+      }
+
+      .review-card {
+        flex-basis: min(82vw, 330px);
       }
 
       .arrival-prompt {

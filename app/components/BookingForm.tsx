@@ -2,15 +2,59 @@
 
 import { FormEvent, useRef, useState } from "react";
 
+type SubmitStatus = "idle" | "submitting" | "success" | "error";
+
 export function BookingForm() {
   const formRef = useRef<HTMLFormElement | null>(null);
   const noticeRef = useRef<HTMLDivElement | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<SubmitStatus>("idle");
+  const [notice, setNotice] = useState("");
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSubmitted(true);
-    formRef.current?.reset();
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    setStatus("submitting");
+    setNotice("");
+
+    try {
+      const response = await fetch("/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.get("name"),
+          phone: formData.get("phone"),
+          pet: formData.get("pet"),
+          service: formData.get("service"),
+          arrivalTime: formData.get("arrivalTime"),
+          message: formData.get("message"),
+        }),
+      });
+
+      const data = (await response.json()) as {
+        message?: string;
+        error?: string;
+      };
+
+      if (!response.ok) {
+        throw new Error(data.error ?? "预约提交失败，请稍后再试。");
+      }
+
+      setStatus("success");
+      setNotice(data.message ?? "预约信息已提交，我们会尽快联系你确认。");
+      form.reset();
+    } catch (error) {
+      setStatus("error");
+      setNotice(
+        error instanceof Error
+          ? error.message
+          : "预约提交失败，请稍后再试。",
+      );
+    }
 
     window.requestAnimationFrame(() => {
       noticeRef.current?.scrollIntoView({
@@ -44,17 +88,19 @@ export function BookingForm() {
       </label>
       <textarea
         name="message"
+        maxLength={500}
         placeholder="补充说明：宠物年龄、体重、是否怕水、是否打结等"
       />
       <div
-        className="notice"
+        className={`notice ${status === "error" ? "notice-error" : ""}`}
         ref={noticeRef}
-        style={{ display: submitted ? "block" : undefined }}
+        role="status"
+        style={{ display: notice ? "block" : undefined }}
       >
-        预约信息已记录。演示页面不会真实提交，记得接入你的后台或表单服务哦。
+        {notice}
       </div>
-      <button className="button full" type="submit">
-        提交预约
+      <button className="button full" type="submit" disabled={status === "submitting"}>
+        {status === "submitting" ? "提交中..." : "提交预约"}
       </button>
     </form>
   );

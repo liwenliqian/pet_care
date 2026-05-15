@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { LocationInfo } from "@/app/components/LocationInfo";
+import { SectionHeading } from "@/app/components/SectionHeading";
 
 export default function Home() {
   return (
@@ -62,6 +64,15 @@ export default function Home() {
               今日预约享免费耳道检查与爪垫护理
             </div>
           </div>
+        </div>
+      </section>
+      <section id="location">
+        <div className="container">
+          <SectionHeading
+            title="门店信息"
+            description="欢迎提前预约到店参观护理区，也可以先电话沟通宠物情况。"
+          />
+          <LocationInfo />
         </div>
       </section>
     </main>
